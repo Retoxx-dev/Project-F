@@ -56,7 +56,18 @@ def read_level(level_id: int, db: Session = Depends(get_db)):
     return level
 
 
-#TODO GET TICKETTYPES
+#TicketTypes
+@app.get('/tickettypes/', response_model=list[schemas.TicketType])
+def read_all_ticket_types(skip: int = 0, limit: int=100, db: Session = Depends(get_db)):
+    all_ticket_types = crud.get_all_ticket_types(db, skip=skip, limit=limit)
+    return all_ticket_types
+
+@app.get("/tickettypes/{ticket_type_id}", response_model=schemas.TicketType)
+def read_level(ticket_type_id: int, db: Session = Depends(get_db)):
+    ticket_type = crud.get_ticket_type(db, ticket_type_id=ticket_type_id)
+    if ticket_type is None:
+        raise HTTPException(status_code=404, detail="Ticket type not found")
+    return ticket_type
 
 
 

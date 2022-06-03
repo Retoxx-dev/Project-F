@@ -22,3 +22,10 @@ def get_all_levels(db: Session, skip: int = 0, limit: int = 100):
 
 def get_level(db: Session, level_id: int):
     return db.query(models.Level).filter(models.Level.id == level_id).first()
+
+#TicketTypes
+def get_all_ticket_types(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.TicketType).offset(skip).limit(limit).all()
+
+def get_ticket_type(db: Session, ticket_type_id: int):
+    return db.query(models.TicketType).filter(models.TicketType.id == ticket_type_id).first()
