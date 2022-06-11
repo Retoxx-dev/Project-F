@@ -8,7 +8,7 @@ class Ticket(Base):
     id = Column(Integer, primary_key=True, index=True)
     summary = Column(String(60))
     description = Column(String(240))
-    customer_id = Column(Integer, ForeignKey('customers.id'))
+    #customer_id = Column(Integer, ForeignKey('customers.id'))
     status_id = Column(Integer, ForeignKey('statuses.id'))
     level_id = Column(Integer, ForeignKey('levels.id'))
     #agent_id = Column(Integer, ForeignKey('agents.id'))

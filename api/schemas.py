@@ -1,19 +1,28 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+from typing import Optional
+
+class ResponseModel(BaseModel):
+    details: str
+
 #Ticket
 class TicketBase(BaseModel):
-    pass        
+    summary: Optional[str] = None
+    description: Optional[str] = None
+    status_id: Optional[int] = None 
+    level_id: Optional[int] = None 
+    ticket_type_id: Optional[int] = None 
+    closure_note: str | None = None        
   
 class TicketCreate(TicketBase):
-    summary: str
-    description: str
-    username: str
-    status_id: int
+    summary: str 
+    description: str 
+    status_id: int 
     level_id: int
     ticket_type_id: int
     closure_note: str | None = None
-    
+   
 class Ticket(TicketBase):
     id: int
     summary: str
@@ -27,6 +36,10 @@ class Ticket(TicketBase):
     class Config:
         orm_mode = True
         
+class TicketUpdate(TicketBase):
+    pass
+
+
 #Status
 class StatusBase(BaseModel):
     pass        

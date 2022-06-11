@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 
 from . import models, schemas
 
+from fastapi.encoders import jsonable_encoder
+
 #Tickets
 def get_ticket(db: Session, ticket_id: int):
     return db.query(models.Ticket).filter(models.Ticket.id == ticket_id).first()
@@ -23,6 +25,26 @@ def post_ticket(db: Session, ticket: schemas.TicketCreate):
     db.refresh(ticket)
     return ticket
 
+def delete_ticket(db: Session, ticket_id: int):
+    ticket_to_delete = db.query(models.Ticket).filter(models.Ticket.id == ticket_id).first()
+    db.delete(ticket_to_delete)
+    db.commit()
+    return schemas.ResponseModel(details=f"Ticket {ticket_id} has been deleted")
+
+def put_ticket(db: Session, db_obj, obj_in):
+    obj_data = jsonable_encoder(db_obj)
+    if isinstance(obj_in, dict):
+        update_data = obj_in
+    else:
+        update_data = obj_in.dict(exclude_unset=True)
+    for field in obj_data:
+        if field in update_data:
+            setattr(db_obj, field, update_data[field])
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+    
 #Statuses
 def get_all_statuses(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Status).offset(skip).limit(limit).all()
