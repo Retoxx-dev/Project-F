@@ -28,6 +28,26 @@ def read_ticket(ticket_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Ticket not found")
     return ticket
 
+@app.post("/tickets/", response_model=schemas.Ticket)
+def create_ticket(ticket: schemas.TicketCreate, db: Session = Depends(get_db)):
+    #TODO check if status_id = ticket.status_id level_id = ticket.level_id, ticket_type_id = ticket.ticket_type_id are present
+    return crud.post_ticket(db=db, ticket=ticket)
+
+@app.delete("/tickets/{ticket_id}", response_model=schemas.ResponseModel)
+def delete_ticket(ticket_id: int, db: Session = Depends(get_db)):
+    ticket = crud.get_ticket(db, ticket_id=ticket_id)
+    if not ticket:
+        raise HTTPException(status_code=404, detail=f"Ticket not found")
+    return crud.delete_ticket(db=db, ticket_id=ticket_id)
+
+@app.put("/tickets/{ticket_id}", response_model=schemas.Ticket)
+def update_ticket(ticket_id: int, ticket: schemas.TicketUpdate, db: Session = Depends(get_db)):
+    db_ticket = crud.get_ticket(db, ticket_id=ticket_id)
+    if db_ticket:
+        db_ticket = crud.put_ticket(db=db, db_obj=db_ticket, obj_in=ticket)
+        return db_ticket
+    raise HTTPException(status_code=404, detail="Ticket not found")
+        
 #Statuses
 @app.get('/statuses/', response_model=list[schemas.Status])
 def read_all_statuses(skip: int = 0, limit: int=100, db: Session = Depends(get_db)):
@@ -40,6 +60,13 @@ def read_status(status_id: int, db: Session = Depends(get_db)):
     if status is None:
         raise HTTPException(status_code=404, detail="Status not found")
     return status
+
+@app.post("/statuses/", response_model=schemas.Status)
+def create_status(status: schemas.StatusCreate, db: Session = Depends(get_db)):
+    db_status = crud.get_status_name(db, status_name=status.status_name)
+    if db_status:
+        raise HTTPException(status_code=409, detail="Status with that name already exists")
+    return crud.post_status(db=db, status=status)
 
 
 #Levels
@@ -55,6 +82,13 @@ def read_level(level_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Level not found")
     return level
 
+@app.post("/levels/", response_model=schemas.Level)
+def create_level(level: schemas.LevelCreate, db: Session = Depends(get_db)):
+    db_level = crud.get_level_name(db, level_name=level.level_name)
+    if db_level:
+        raise HTTPException(status_code=409, detail="Level with that name already exists")
+    return crud.post_level(db=db, level=level)
+
 
 #TicketTypes
 @app.get('/tickettypes/', response_model=list[schemas.TicketType])
@@ -68,6 +102,13 @@ def read_level(ticket_type_id: int, db: Session = Depends(get_db)):
     if ticket_type is None:
         raise HTTPException(status_code=404, detail="Ticket type not found")
     return ticket_type
+
+@app.post("/tickettypes/", response_model=schemas.TicketType)
+def create_ticket_type(ticket_type: schemas.TicketTypeCreate, db: Session = Depends(get_db)):
+    db_ticket_type = crud.get_ticket_type_name(db, ticket_type_name=ticket_type.ticket_type_name)
+    if db_ticket_type:
+        raise HTTPException(status_code=409, detail="Ticket type with that name already exists")
+    return crud.post_ticket_type(db=db, ticket_type=ticket_type)
 
 
 
