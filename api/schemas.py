@@ -23,7 +23,7 @@ class TicketCreate(TicketBase):
     ticket_type_id: int
     closure_note: str | None = None
    
-class Ticket(TicketBase):
+class Ticket(BaseModel): #check if change from TicketBase to BaseModel will to harm
     id: int
     summary: str
     description: str
@@ -42,26 +42,32 @@ class TicketUpdate(TicketBase):
 
 #Status
 class StatusBase(BaseModel):
-    pass        
+    status_name: Optional[str] = None     
   
 class StatusCreate(StatusBase):
-    status_name: str
+    status_name: str 
     
-class Status(StatusBase):
+class Status(BaseModel):
     id: int
     status_name: str
     
     class Config:
         orm_mode = True
+
+class StatusUpdate(StatusBase):
+    pass
             
 #Level
 class LevelBase(BaseModel):
-    pass   
+    level_name: Optional[str] = None   
 
 class LevelCreate(LevelBase):
     level_name: str
+    
+class LevelUpdate(LevelBase):
+    pass
 
-class Level(LevelBase):
+class Level(BaseModel):
     id: int
     level_name: str
     
@@ -70,12 +76,15 @@ class Level(LevelBase):
 
 #TicketType
 class TicketTypeBase(BaseModel):
-    pass   
+    ticket_type_name: Optional[str] = None 
 
 class TicketTypeCreate(TicketTypeBase):
     ticket_type_name: str
     
-class TicketType(TicketTypeBase):
+class TicketTypeUpdate(TicketTypeBase):
+    pass
+    
+class TicketType(BaseModel):
     id: int
     ticket_type_name: str
     
