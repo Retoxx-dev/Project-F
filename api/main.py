@@ -162,7 +162,7 @@ def create_agent(agent: schemas.AgentCreate, db: Session = Depends(get_db), get_
 
 #Auth
 @app.post('/auth/')
-def authorize(auth: schemas.Auth, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+def authorize(auth: schemas.Auth, db: Session = Depends(get_db)):
     user = crud.verify_username(db=db, username=auth.username)
     verify_password = crud.verify_password(db=db, password=auth.password, hashed_password=user.password_hash)
     if not user:
