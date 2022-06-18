@@ -1,3 +1,6 @@
 fastapi[all]
 sqlalchemy
 mysqlclient
+passlib
+bcrypt
+python-jose[cryptography]

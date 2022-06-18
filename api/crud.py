@@ -4,6 +4,8 @@ from . import models, schemas
 
 from fastapi.encoders import jsonable_encoder
 
+from passlib.hash import bcrypt
+
 #Tickets
 def get_ticket(db: Session, ticket_id: int):
     return db.query(models.Ticket).filter(models.Ticket.id == ticket_id).first()
@@ -155,3 +157,26 @@ def put_ticket_type(db: Session, db_obj, obj_in):
     db.commit()
     db.refresh(db_obj)
     return db_obj
+
+#Agents
+def post_agent(db: Session, agent: schemas.AgentCreate):
+    agent = models.Agent(
+        username = agent.username,
+        email = agent.email,
+        firstname = agent.firstname,
+        lastname = agent.lastname,
+        password_hash = bcrypt.hash(agent.password_hash)
+    )
+    db.add(agent)
+    db.commit()
+    db.refresh(agent)
+    return agent
+
+
+
+#Auth
+def verify_username(db: Session, username: str):
+    return db.query(models.Agent).filter(models.Agent.username == username).first()
+
+def verify_password(db: Session, password: str, hashed_password: str):
+    return bcrypt.verify(password, hashed_password)

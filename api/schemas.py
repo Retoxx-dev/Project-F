@@ -91,3 +91,42 @@ class TicketType(BaseModel):
     class Config:
         orm_mode = True
         
+#Agent
+class AgentBase(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None
+    
+class Agent(BaseModel): #check if change from TicketBase to BaseModel will to harm
+    id: int
+    username: Optional[str] = None
+    email: Optional[str] = None
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None
+    
+    class Config:
+        orm_mode = True
+
+class AgentCreate(AgentBase):
+    username: str
+    email: str
+    firstname: str
+    lastname: str
+    password_hash: str
+        
+#Auth
+class Auth(BaseModel):
+    username: str
+    password: str
+    
+    
+#Token
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: str | None = None
+    
