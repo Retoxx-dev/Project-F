@@ -141,7 +141,7 @@ def create_ticket_type(ticket_type: schemas.TicketTypeCreate, db: Session = Depe
     return crud.post_ticket_type(db=db, ticket_type=ticket_type)
 
 @app.delete("/tickettypes/{ticket_type_id}", response_model=schemas.ResponseModel)
-def delete_level(ticket_type_id: int, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+def delete_ticket_type(ticket_type_id: int, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
     ticket_type = crud.get_ticket_type(db, ticket_type_id==ticket_type_id)
     if not ticket_type:
         raise HTTPException(status_code=404, detail=f"Ticket type not found")
@@ -155,10 +155,69 @@ def update_level(ticket_type_id: int, ticket_type: schemas.TicketTypeUpdate, db:
         return db_ticket_type
     raise HTTPException(status_code=404, detail="Ticket type not found")
 
-#Users
+#Agents
+@app.get('/agents/', response_model=list[schemas.Agent])
+def read_all_agents(skip: int = 0, limit: int=100, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    all_agents = crud.get_all_agents(db, skip=skip, limit=limit)
+    return all_agents
+
+@app.get("/agents/{agent_id}", response_model=schemas.Agent)
+def read_agent(agent_id: int, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    agent = crud.get_agent(db, agent_id=agent_id)
+    if agent is None:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    return agent
+
 @app.post('/agents/', response_model=schemas.Agent)
 def create_agent(agent: schemas.AgentCreate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
     return crud.post_agent(db=db, agent=agent)
+
+@app.delete("/agents/{agent_id}", response_model=schemas.ResponseModel)
+def delete_agent(agent_id: int, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    agent = crud.get_agent(db, agent_id==agent_id)
+    if not agent:
+        raise HTTPException(status_code=404, detail=f"Agent not found")
+    return crud.delete_agent(db=db, agent_id=agent_id)
+
+@app.put("/agents/{agent_id}", response_model=schemas.Agent)
+def update_agent(agent_id: int, agent: schemas.AgentUpdate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    db_agent = crud.get_agent(db, agent_id=agent_id)
+    if db_agent:
+        db_agent = crud.put_agent(db=db, db_obj=db_agent, obj_in=agent)
+        return db_agent
+    raise HTTPException(status_code=404, detail="Agent not found")
+
+#Customers
+@app.get('/customers/', response_model=list[schemas.Customer])
+def read_all_customers(skip: int = 0, limit: int=100, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    all_customers = crud.get_all_customers(db, skip=skip, limit=limit)
+    return all_customers
+
+@app.get("/customers/{customer_id}", response_model=schemas.Customer)
+def read_customer(customer_id: int, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    customer = crud.get_customer(db, customer_id=customer_id)
+    if customer is None:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    return customer
+
+@app.post('/customers/', response_model=schemas.Customer)
+def create_customer(customer: schemas.CustomerCreate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    return crud.post_customer(db=db, customer=customer)
+
+@app.delete("/customers/{customer_id}", response_model=schemas.ResponseModel)
+def delete_customer(customer_id: int, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    customer = crud.get_customer(db, customer_id=customer_id)
+    if not customer:
+        raise HTTPException(status_code=404, detail=f"Customer not found")
+    return crud.delete_customer(db=db, customer_id=customer_id)
+
+@app.put("/customers/{customer_id}", response_model=schemas.Customer)
+def update_agent(customer_id: int, customer: schemas.CustomerUpdate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    db_customer = crud.get_customer(db, customer_id=customer_id)
+    if db_customer:
+        db_customer = crud.put_agent(db=db, db_obj=db_customer, obj_in=customer)
+        return db_customer
+    raise HTTPException(status_code=404, detail="Customer not found")
 
 #Auth
 @app.post('/auth/')
@@ -173,5 +232,17 @@ def authorize(auth: schemas.Auth, db: Session = Depends(get_db)):
     access_token = token_gen.create_access_token(data={"sub": user.username})
     
     return {'access_token' : access_token, 'token_type' : 'Bearer'}
+
+#Password reset for agents
+@app.put('/agents/{agent_id}/password', response_model=schemas.ResponseModel)
+def reset_password_agent(agent_id: int, agent: schemas.AgentResetPassword, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    db_agent = crud.get_agent(db, agent_id=agent_id)
+    if db_agent:
+        if agent.password != agent.confirm_password:
+            raise HTTPException(status_code=401, detail="Passwords do not match")
+        db_agent =  crud.reset_password_agent(db=db, agent_id=agent_id, agent=agent)
+        return {"message" : "Password has been changed"}
+    raise HTTPException(status_code=404, detail="Agent not found")
+
     
         
