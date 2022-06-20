@@ -159,6 +159,12 @@ def put_ticket_type(db: Session, db_obj, obj_in):
     return db_obj
 
 #Agents
+def get_agent(db: Session, agent_id: int):
+    return db.query(models.Agent).filter(models.Agent.id == agent_id).first()
+
+def get_all_agents(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Agent).offset(skip).limit(limit).all()
+
 def post_agent(db: Session, agent: schemas.AgentCreate):
     agent = models.Agent(
         username = agent.username,
@@ -172,7 +178,73 @@ def post_agent(db: Session, agent: schemas.AgentCreate):
     db.refresh(agent)
     return agent
 
+def delete_agent(db: Session, agent_id: int):
+    agent_to_delete = db.query(models.Agent).filter(models.Agent.id == agent_id).first()
+    db.delete(agent_to_delete)
+    db.commit()
+    return schemas.ResponseModel(details=f"Agent {agent_id} has been deleted")
 
+def put_agent(db: Session, db_obj, obj_in):
+    obj_data = jsonable_encoder(db_obj)
+    if isinstance(obj_in, dict):
+        update_data = obj_in
+    else:
+        update_data = obj_in.dict(exclude_unset=True)
+    for field in obj_data:
+        if field in update_data:
+            setattr(db_obj, field, update_data[field])
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
+
+def reset_password_agent(db: Session, agent_id: int, agent: schemas.AgentResetPassword):
+    user_password_to_change = db.query(models.Agent).filter(models.Agent.id == agent_id).first()
+    new_password_hash = bcrypt.hash(agent.password)
+    user_password_to_change.password_hash = new_password_hash
+    db.add(user_password_to_change)
+    db.commit()
+    db.refresh(user_password_to_change)
+    return user_password_to_change
+
+#Customers
+def get_customer(db: Session, customer_id: int):
+    return db.query(models.Customer).filter(models.Customer.id == customer_id).first()
+
+def get_all_customers(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Customer).offset(skip).limit(limit).all()
+
+def post_customer(db: Session, customer: schemas.CustomerCreate):
+    customer = models.Customer(
+        username = customer.username,
+        email = customer.email,
+        firstname = customer.firstname,
+        lastname = customer.lastname
+    )
+    db.add(customer)
+    db.commit()
+    db.refresh(customer)
+    return customer
+
+def delete_customer(db: Session, customer_id: int):
+    customer_to_delete = db.query(models.Customer).filter(models.Customer.id == customer_id).first()
+    db.delete(customer_to_delete)
+    db.commit()
+    return schemas.ResponseModel(details=f"Customer {customer_id} has been deleted")
+
+def put_customer(db: Session, db_obj, obj_in):
+    obj_data = jsonable_encoder(db_obj)
+    if isinstance(obj_in, dict):
+        update_data = obj_in
+    else:
+        update_data = obj_in.dict(exclude_unset=True)
+    for field in obj_data:
+        if field in update_data:
+            setattr(db_obj, field, update_data[field])
+    db.add(db_obj)
+    db.commit()
+    db.refresh(db_obj)
+    return db_obj
 
 #Auth
 def verify_username(db: Session, username: str):

@@ -115,6 +115,13 @@ class AgentCreate(AgentBase):
     lastname: str
     password_hash: str
         
+class AgentUpdate(AgentBase):
+    pass
+
+class AgentResetPassword(BaseModel):
+    password: str
+    confirm_password: str
+
 #Auth
 class Auth(BaseModel):
     username: str
@@ -130,3 +137,28 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: str | None = None
     
+#Customers
+class CustomerBase(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None
+    
+class Customer(BaseModel): #check if change from TicketBase to BaseModel will to harm
+    id: int
+    username: Optional[str] = None
+    email: Optional[str] = None
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None
+    
+    class Config:
+        orm_mode = True
+
+class CustomerCreate(CustomerBase):
+    username: str
+    email: str
+    firstname: str
+    lastname: str
+        
+class CustomerUpdate(CustomerBase):
+    pass
