@@ -19,7 +19,7 @@ def get_db():
         db.close()
         
 #Auth
-@app.post('/auth/', tags=["Authorize"])
+@app.post('/auth/', tags=["Auth"])
 def authorize(auth: schemas.Auth, db: Session = Depends(get_db)):
     user = crud.verify_username(db=db, username=auth.username)
     verify_password = crud.verify_password(db=db, password=auth.password, hashed_password=user.password_hash)
