@@ -10,16 +10,20 @@ class ResponseModel(BaseModel):
 class TicketBase(BaseModel):
     summary: Optional[str] = None
     description: Optional[str] = None
+    customer_id: Optional[int] = None
     status_id: Optional[int] = None 
-    level_id: Optional[int] = None 
+    level_id: Optional[int] = None
+    agent_id: Optional[int] = None
     ticket_type_id: Optional[int] = None 
     closure_note: str | None = None        
   
 class TicketCreate(TicketBase):
     summary: str 
-    description: str 
+    description: str
+    customer_id: int
     status_id: int 
     level_id: int
+    agent_id: int
     ticket_type_id: int
     closure_note: str | None = None
    
@@ -27,9 +31,16 @@ class Ticket(BaseModel): #check if change from TicketBase to BaseModel will to h
     id: int
     summary: str
     description: str
+    customer_id: int
+    customer_username: str
     status_id: int
+    status_name: str
     level_id: int
+    level_name: str
+    agent_id: int
+    agent_username: str
     ticket_type_id: int
+    ticket_type_name: str
     date_occured: datetime
     closure_note: str | None = None
     
@@ -113,7 +124,7 @@ class AgentCreate(AgentBase):
     email: str
     firstname: str
     lastname: str
-    password_hash: str
+    password: str
         
 class AgentUpdate(AgentBase):
     pass

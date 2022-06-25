@@ -2,7 +2,9 @@ version: '3.9'
 services:
   api:
     container_name: api
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.back.dev
     ports:
       - 80:8000
     volumes:
@@ -11,6 +13,14 @@ services:
       - db
     env_file:
       - dev.env
+
+  frontend:
+    container_name: front
+    build:
+      context: .
+      dockerfile: Dockerfile.front.dev
+    ports:
+      - 3000:3000
  
   db:
     container_name: db

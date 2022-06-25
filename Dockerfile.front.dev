@@ -1,0 +1,13 @@
+FROM node:18-slim
+
+WORKDIR /app
+
+ENV PATH /app/node_modules/.bin:$PATH
+
+COPY ./frontend/package.json ./frontend/package-lock.json .
+
+RUN npm install --force
+
+COPY ./frontend/ .
+
+ENTRYPOINT ["npm", "run", "start"]
