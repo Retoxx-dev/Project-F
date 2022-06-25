@@ -1,6 +1,8 @@
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
+from fastapi.middleware.cors import CORSMiddleware
+
 from . import crud, models, schemas, oauth2, token_gen
 from .database import SessionLocal, engine
 
@@ -9,6 +11,19 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     swagger_ui_parameters={"defaultModelsExpandDepth": -1}
+)
+
+origins = [
+    #"http://localhost/auth"
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 def get_db():
@@ -22,15 +37,15 @@ def get_db():
 @app.post('/auth/', tags=["Authorize"])
 def authorize(auth: schemas.Auth, db: Session = Depends(get_db)):
     user = crud.verify_username(db=db, username=auth.username)
-    verify_password = crud.verify_password(db=db, password=auth.password, hashed_password=user.password_hash)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
+    verify_password = crud.verify_password(db=db, password=auth.password, hashed_password=user.password_hash)
     if not verify_password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     access_token = token_gen.create_access_token(data={"sub": user.username})
     
-    return {'access_token' : access_token, 'token_type' : 'Bearer'}
+    return {'access_token' : access_token}
 
 #Tickets
 @app.get('/tickets/', response_model=list[schemas.Ticket], tags=["Tickets"])
@@ -185,7 +200,7 @@ def read_agent(agent_id: int, db: Session = Depends(get_db), get_current_user: s
     return agent
 
 @app.post('/agents/', response_model=schemas.Agent, tags=["Agents"])
-def create_agent(agent: schemas.AgentCreate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+def create_agent(agent: schemas.AgentCreate, db: Session = Depends(get_db)):
     return crud.post_agent(db=db, agent=agent)
 
 @app.delete("/agents/{agent_id}", response_model=schemas.ResponseModel, tags=["Agents"])
