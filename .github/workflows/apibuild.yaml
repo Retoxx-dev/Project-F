@@ -3,7 +3,7 @@ name: API - build
 on:
   pull_request:
     paths:
-    - 'api/*'
+    - 'api/**'
 
 jobs:     
   build:
