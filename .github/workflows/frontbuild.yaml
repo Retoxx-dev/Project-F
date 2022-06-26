@@ -1,0 +1,17 @@
+name: FRONTEND - build
+
+on:
+  pull_request:
+    paths:
+    - 'frontend/*'
+
+jobs:     
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout GitHub Action
+      uses: actions/checkout@main
+     
+    - name: Build api image
+      run: |
+        docker build . -f Dockerfile.front.dev -t front
