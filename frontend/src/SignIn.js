@@ -55,7 +55,7 @@ export default function Signin() {
       window.location.href = "/";
     }
     else{
-      swal("Invalid credentials", "Please doublecheck your username and password", "error");
+      swal("Invalid credentials", "Please doublecheck your username and password!", "error");
     }
   }
   return (
