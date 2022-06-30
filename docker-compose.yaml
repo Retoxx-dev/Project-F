@@ -4,7 +4,7 @@ services:
     container_name: api
     build:
       context: .
-      dockerfile: Dockerfile.back.dev
+      dockerfile: ./Docker/Python_api/Dockerfile
     ports:
       - 80:8000
     volumes:
@@ -14,13 +14,29 @@ services:
     env_file:
       - dev.env
 
+  email_sender:
+    container_name: email_sender
+    build:
+      context: .
+      dockerfile: ./Docker/Python_email_sender/Dockerfile
+    ports:
+      - 82:8001
+    volumes:
+      - .:/app
+    env_file:
+      - dev.env
+
   frontend:
     container_name: front
     build:
       context: .
-      dockerfile: Dockerfile.front.dev
+      dockerfile: ./Docker/React/Dockerfile
     ports:
       - 3000:3000
+    environment:
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - ./frontend/:/app
  
   db:
     container_name: db

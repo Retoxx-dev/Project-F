@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import crud, models, schemas, oauth2, token_gen
+from . import crud, models, schemas, oauth2, token_gen, send_email
 from .database import SessionLocal, engine
 
 
@@ -200,7 +200,7 @@ def read_agent(agent_id: int, db: Session = Depends(get_db), get_current_user: s
     return agent
 
 @app.post('/agents/', response_model=schemas.Agent, tags=["Agents"])
-def create_agent(agent: schemas.AgentCreate, db: Session = Depends(get_db)):
+def create_agent(agent: schemas.AgentCreate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
     return crud.post_agent(db=db, agent=agent)
 
 @app.delete("/agents/{agent_id}", response_model=schemas.ResponseModel, tags=["Agents"])

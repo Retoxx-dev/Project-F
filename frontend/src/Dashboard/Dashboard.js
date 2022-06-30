@@ -18,12 +18,17 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems} from './listItems';
-import Orders from './Tickets';
+import Tickets from './Tickets';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const handleLogout = () => {
   localStorage.removeItem("access_token");
   window.location.href = "/";
 };
+
+
+
+ 
 
 function Copyright(props) {
   return (
@@ -121,13 +126,17 @@ function DashboardContent() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              Service Desk
             </Typography>
             <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
+
+                <LogoutIcon 
+                  onClick={handleLogout}
+                />
+
             </IconButton>
+
+            
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -166,7 +175,7 @@ function DashboardContent() {
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
+                  <Tickets />
                 </Paper>
               </Grid>
             </Grid>
