@@ -4,10 +4,10 @@ WORKDIR /app
 
 ENV PATH /app/node_modules/.bin:$PATH
 
-COPY ./frontend/package.json ./frontend/package-lock.json .
+COPY frontend/package.json frontend/package-lock.json .
 
 RUN npm install --force
 
-COPY ./frontend/ .
+COPY frontend/ .
 
 ENTRYPOINT ["npm", "run", "start"]
