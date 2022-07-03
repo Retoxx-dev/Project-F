@@ -6,11 +6,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-
 function Dashboard(){
 
   const [tickets, ticketsData] = useState([])
@@ -20,7 +15,7 @@ function Dashboard(){
 
   const getTickets = () => {
     const token = localStorage.getItem("access_token");
-    fetch('http://localhost/tickets/', {
+    fetch('http://localhost/api/tickets/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -40,7 +35,7 @@ function Dashboard(){
 
   const getAgents = () => {
     const token = localStorage.getItem("access_token");
-    fetch('http://localhost/agents/', {
+    fetch('http://localhost/api/agents/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -60,7 +55,7 @@ function Dashboard(){
 
   const getCustomers = () => {
     const token = localStorage.getItem("access_token");
-    fetch('http://localhost/customers/', {
+    fetch('http://localhost/api/customers/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -80,7 +75,7 @@ function Dashboard(){
 
   const getTicketTypes = () => {
     const token = localStorage.getItem("access_token");
-    fetch('http://localhost/tickettypes/', {
+    fetch('http://localhost/api/tickettypes/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -100,7 +95,7 @@ function Dashboard(){
 
   const getLevels = () => {
     const token = localStorage.getItem("access_token");
-    fetch('http://localhost/levels/', {
+    fetch('http://localhost/api/levels/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -120,7 +115,7 @@ function Dashboard(){
 
   const getStatuses = () => {
     const token = localStorage.getItem("access_token");
-    fetch('http://localhost/statuses/', {
+    fetch('http://localhost/api/statuses/', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

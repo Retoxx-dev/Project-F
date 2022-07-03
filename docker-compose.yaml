@@ -1,12 +1,23 @@
 version: '3.9'
 services:
+
+  loadbalancer:
+    container_name: loadbalancer
+    build:
+      context: .
+      dockerfile: ./Docker/Nginx/Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - ./Docker/Nginx/nginx.conf:/etc/nginx/nginx.conf
+
   api:
     container_name: api
     build:
       context: .
       dockerfile: ./Docker/Python_api/Dockerfile
     ports:
-      - 80:8000
+      - 81:8000
     volumes:
       - .:/app
     depends_on:

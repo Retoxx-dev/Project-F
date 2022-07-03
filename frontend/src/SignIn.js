@@ -30,7 +30,7 @@ function Copyright(props) {
 const theme = createTheme();
 
 async function loginUser(credentials) {
-  return fetch('http://localhost/auth/', {
+  return fetch('http://localhost/api/auth/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
