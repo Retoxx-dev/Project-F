@@ -6,8 +6,6 @@ COPY ./Docker/Python_email_sender/requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY mail_sender_api/ .
+COPY mail_sender/ .
 
-EXPOSE 8001
-
-CMD uvicorn mail_sender_api.main:app --host 0.0.0.0 --port 8001 --reload
+CMD ["python", "-u", "mail_sender/main.py"]
