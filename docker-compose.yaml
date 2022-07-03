@@ -14,13 +14,12 @@ services:
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3.10-management
-    environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
+    env_file:
+      - dev.env      
     ports:
       - 5672:5672
       - 15672:15672
-      
+
   api:
     container_name: api
     build:
