@@ -15,7 +15,7 @@
 |10|`Agents can use the token to make queries`|
 |11|`Customers - agents can list them all or by id`|
 |12|`Customers  - agents can delete, modify and create them`|
-|13|`UI (React)`|
+|13|`Sending emails while creating new agent accounts (with rabbitmq queue)`|
 |14|`Agents can limit number of record in the result`|
 |15|`API documentation (/docs)`|
 |16|`Containerization - Docker`|
