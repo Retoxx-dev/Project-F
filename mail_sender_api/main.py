@@ -7,11 +7,7 @@ from . import email_sender
 app = FastAPI()
 
 origins = [
-    "http://localhost:80/",
-    "http://localhost:82/",
-    "http://localhost/",
-    "http://api:80/",
-    "http://api"
+    "http://localhost:81",
 ]
 
 app.add_middleware(
