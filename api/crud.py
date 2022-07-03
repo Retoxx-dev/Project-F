@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from . import models, schemas, send_email
+from . import models, schemas, rabbitmq_producer
 
 from fastapi.encoders import jsonable_encoder
 
@@ -192,7 +192,7 @@ def post_agent(db: Session, agent: schemas.AgentCreate):
     db.add(agent)
     db.commit()
     db.refresh(agent)
-    send_email.post_send_email(email_recipient=str(agent.email))
+    rabbitmq_producer.send_email(email_recipient=str(agent.email))
     return agent
 
 def delete_agent(db: Session, agent_id: int):

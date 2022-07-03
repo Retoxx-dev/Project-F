@@ -10,7 +10,6 @@ email_sender_server = os.environ.get("EMAIL_SENDER_SERVER")
 email_sender_port = os.environ.get("EMAIL_SENDER_PORT")
 
 def email_new(recipient: str):
-    recipient = recipient.replace("%40", "@")
     message = MIMEMultipart()
     message['Subject'] = "Your account has been created!"
     message['From'] = str(email_sender_address)
@@ -22,5 +21,5 @@ def email_new(recipient: str):
         server.starttls()
         server.login(email_sender_address, email_sender_password)
         server.sendmail(email_sender_address, recipient, message.as_string())
-    return {"message":f"The email to {recipient} has been sent"}
+    
         
