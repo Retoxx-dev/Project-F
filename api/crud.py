@@ -17,6 +17,9 @@ def get_ticket(db: Session, ticket_id: int):
                                                                                                                                       models.Agent,
                                                                                                                                       models.Level,
                                                                                                                                       models.TicketType).filter(models.Ticket.id == ticket_id).first()
+    
+def get_ticket_no_join(db: Session, ticket_id: int):    
+    return db.query(models.Ticket).filter(models.Ticket.id == ticket_id).first()
 
 def get_all_tickets(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Ticket.id, models.Ticket.summary, models.Ticket.description, models.Ticket.customer_id,
@@ -33,8 +36,10 @@ def post_ticket(db: Session, ticket: schemas.TicketCreate):
     ticket = models.Ticket(
         summary = ticket.summary,
         description = ticket.description,
+        customer_id = ticket.customer_id,
         status_id = ticket.status_id,
         level_id = ticket.level_id,
+        agent_id = ticket.agent_id,
         ticket_type_id = ticket.ticket_type_id,
         closure_note = ticket.closure_note,
         )
@@ -178,6 +183,9 @@ def put_ticket_type(db: Session, db_obj, obj_in):
 def get_agent(db: Session, agent_id: int):
     return db.query(models.Agent).filter(models.Agent.id == agent_id).first()
 
+def get_agent_email(db: Session, agent_email):
+    return db.query(models.Agent).filter(models.Agent.email == agent_email).first()
+
 def get_all_agents(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Agent).offset(skip).limit(limit).all()
 
@@ -194,6 +202,7 @@ def post_agent(db: Session, agent: schemas.AgentCreate):
     db.refresh(agent)
     rabbitmq_producer.send_email(email_recipient=str(agent.email))
     return agent
+
 
 def delete_agent(db: Session, agent_id: int):
     agent_to_delete = db.query(models.Agent).filter(models.Agent.id == agent_id).first()
@@ -264,8 +273,8 @@ def put_customer(db: Session, db_obj, obj_in):
     return db_obj
 
 #Auth
-def verify_username(db: Session, username: str):
-    return db.query(models.Agent).filter(models.Agent.username == username).first()
+def verify_email(db: Session, email: str):
+    return db.query(models.Agent).filter(models.Agent.email == email).first()
 
 def verify_password(db: Session, password: str, hashed_password: str):
     return bcrypt.verify(password, hashed_password)

@@ -35,14 +35,14 @@ def get_db():
 #Auth
 @app.post('/api/auth/', tags=["Authorize"])
 def authorize(auth: schemas.Auth, db: Session = Depends(get_db)):
-    user = crud.verify_username(db=db, username=auth.username)
+    user = crud.verify_email(db=db, email=auth.email)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     verify_password = crud.verify_password(db=db, password=auth.password, hashed_password=user.password_hash)
     if not verify_password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    access_token = token_gen.create_access_token(data={"sub": user.username})
+    access_token = token_gen.create_access_token(data={"sub": user.email})
     
     return {'access_token' : access_token}
 
@@ -59,7 +59,7 @@ def read_ticket(ticket_id: int, db: Session = Depends(get_db), get_current_user:
         raise HTTPException(status_code=404, detail="Ticket not found")
     return ticket
 
-@app.post("/api/tickets/", response_model=schemas.Ticket, tags=["Tickets"])
+@app.post("/api/tickets/", response_model=schemas.TicketNoJoin, tags=["Tickets"]) # fix response model
 def create_ticket(ticket: schemas.TicketCreate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
     return crud.post_ticket(db=db, ticket=ticket)
 
@@ -70,9 +70,9 @@ def delete_ticket(ticket_id: int, db: Session = Depends(get_db), get_current_use
         raise HTTPException(status_code=404, detail=f"Ticket not found")
     return crud.delete_ticket(db=db, ticket_id=ticket_id)
 
-@app.put("/api/tickets/{ticket_id}", response_model=schemas.Ticket, tags=["Tickets"])
+@app.put("/api/tickets/{ticket_id}", response_model=schemas.TicketNoJoin ,tags=["Tickets"]) #fix response model
 def update_ticket(ticket_id: int, ticket: schemas.TicketUpdate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
-    db_ticket = crud.get_ticket(db, ticket_id=ticket_id)
+    db_ticket = crud.get_ticket_no_join(db, ticket_id=ticket_id)
     if db_ticket:
         db_ticket = crud.put_ticket(db=db, db_obj=db_ticket, obj_in=ticket)
         return db_ticket
@@ -200,6 +200,9 @@ def read_agent(agent_id: int, db: Session = Depends(get_db), get_current_user: s
 
 @app.post('/api/agents/', response_model=schemas.Agent, tags=["Agents"])
 def create_agent(agent: schemas.AgentCreate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    agent_db = crud.get_agent_email(db, agent_email=agent.email)
+    if agent_db:
+        raise HTTPException(status_code=409, detail="Email already taken")
     return crud.post_agent(db=db, agent=agent)
 
 @app.delete("/api/agents/{agent_id}", response_model=schemas.ResponseModel, tags=["Agents"])

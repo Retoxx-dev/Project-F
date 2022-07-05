@@ -50,6 +50,20 @@ class Ticket(BaseModel): #check if change from TicketBase to BaseModel will to h
 class TicketUpdate(TicketBase):
     pass
 
+class TicketNoJoin(BaseModel):
+    id: int
+    summary: str
+    description: str
+    customer_id: int
+    status_id: int
+    level_id: int
+    agent_id: int
+    ticket_type_id: int
+    date_occured: datetime
+    closure_note: str | None = None
+    
+    class Config:
+        orm_mode = True
 
 #Status
 class StatusBase(BaseModel):
@@ -135,7 +149,7 @@ class AgentResetPassword(BaseModel):
 
 #Auth
 class Auth(BaseModel):
-    username: str
+    email: str
     password: str
     
     

@@ -41,13 +41,13 @@ async function loginUser(credentials) {
  }
 
 export default function Signin() {
-  const [username, setUserName] = useState();
+  const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   const handleSubmit = async e => {
     e.preventDefault();
     const response = await loginUser({
-      username,
+      email,
       password
     });
     if('access_token' in response){
@@ -55,7 +55,7 @@ export default function Signin() {
       window.location.href = "/";
     }
     else{
-      swal("Invalid credentials", "Please doublecheck your username and password", "error");
+      swal("Invalid credentials", "Please doublecheck your email and password", "error");
     }
   }
   return (
@@ -82,11 +82,11 @@ export default function Signin() {
               required
               fullWidth
               id="email"
-              label="User Name"
+              label="Email"
               name="email"
               autoComplete="email"
               autoFocus
-              onChange={e => setUserName(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
             />
             <TextField
               margin="normal"
