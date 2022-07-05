@@ -3,15 +3,17 @@ from sqlalchemy.orm import Session
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import crud, models, schemas, oauth2, token_gen
+from . import crud, models, schemas, oauth2, token_gen, seed
 from .database import SessionLocal, engine
 
-
-models.Base.metadata.create_all(bind=engine)
+from contextlib import contextmanager
+from fastapi.concurrency import contextmanager_in_threadpool
 
 app = FastAPI(
     swagger_ui_parameters={"defaultModelsExpandDepth": -1}
 )
+
+models.Base.metadata.create_all(bind=engine)
 
 origins = [
     "http://localhost",
@@ -32,6 +34,13 @@ def get_db():
     finally:
         db.close()
         
+ 
+#Seed
+@app.on_event("startup")
+async def configure():
+    async with contextmanager_in_threadpool(contextmanager(get_db)()) as db:
+        seed.seed_initial_data(db=db)
+    
 #Auth
 @app.post('/api/auth/', tags=["Authorize"])
 def authorize(auth: schemas.Auth, db: Session = Depends(get_db)):
@@ -61,6 +70,21 @@ def read_ticket(ticket_id: int, db: Session = Depends(get_db), get_current_user:
 
 @app.post("/api/tickets/", response_model=schemas.TicketNoJoin, tags=["Tickets"]) # fix response model
 def create_ticket(ticket: schemas.TicketCreate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    check_for_status = crud.get_status(db=db, status_id=ticket.status_id)
+    if not check_for_status:
+        raise HTTPException(status_code=404, detail="Status with that ID wasn't found")
+    check_for_level = crud.get_level(db=db, level_id=ticket.level_id)
+    if not check_for_level:
+        raise HTTPException(status_code=404, detail="Level with that ID wasn't found")
+    check_for_ticket_type = crud.get_ticket_type(db=db, ticket_type_id=ticket.ticket_type_id)
+    if not check_for_ticket_type:
+        raise HTTPException(status_code=404, detail="Ticket Type with that ID wasn't found")
+    check_for_customer = crud.get_customer(db=db, customer_id=ticket.customer_id)
+    if not check_for_customer:
+        raise HTTPException(status_code=404, detail="Customer with that ID wasn't found")
+    check_for_agent = crud.get_agent(db=db, agent_id=ticket.agent_id)
+    if not check_for_agent:
+        raise HTTPException(status_code=404, detail="Agent with that ID wasn't found")
     return crud.post_ticket(db=db, ticket=ticket)
 
 @app.delete("/api/tickets/{ticket_id}", response_model=schemas.ResponseModel, tags=["Tickets"])
@@ -72,6 +96,21 @@ def delete_ticket(ticket_id: int, db: Session = Depends(get_db), get_current_use
 
 @app.put("/api/tickets/{ticket_id}", response_model=schemas.TicketNoJoin ,tags=["Tickets"]) #fix response model
 def update_ticket(ticket_id: int, ticket: schemas.TicketUpdate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
+    check_for_status = crud.get_status(db=db, status_id=ticket.status_id)
+    if not check_for_status:
+        raise HTTPException(status_code=404, detail="Status with that ID wasn't found")
+    check_for_level = crud.get_level(db=db, level_id=ticket.level_id)
+    if not check_for_level:
+        raise HTTPException(status_code=404, detail="Level with that ID wasn't found")
+    check_for_ticket_type = crud.get_ticket_type(db=db, ticket_type_id=ticket.ticket_type_id)
+    if not check_for_ticket_type:
+        raise HTTPException(status_code=404, detail="Ticket Type with that ID wasn't found")
+    check_for_customer = crud.get_customer(db=db, customer_id=ticket.customer_id)
+    if not check_for_customer:
+        raise HTTPException(status_code=404, detail="Customer with that ID wasn't found")
+    check_for_agent = crud.get_agent(db=db, agent_id=ticket.agent_id)
+    if not check_for_agent:
+        raise HTTPException(status_code=404, detail="Agent with that ID wasn't found")
     db_ticket = crud.get_ticket_no_join(db, ticket_id=ticket_id)
     if db_ticket:
         db_ticket = crud.put_ticket(db=db, db_obj=db_ticket, obj_in=ticket)
@@ -260,7 +299,7 @@ def reset_password_agent(agent_id: int, agent: schemas.AgentResetPassword, db: S
         if agent.password != agent.confirm_password:
             raise HTTPException(status_code=401, detail="Passwords do not match")
         db_agent =  crud.reset_password_agent(db=db, agent_id=agent_id, agent=agent)
-        return {"message" : "Password has been changed"}
+        return {"details" : "Password has been changed"}
     raise HTTPException(status_code=404, detail="Agent not found")
 
     

@@ -10,7 +10,7 @@ from passlib.hash import bcrypt
 def get_ticket(db: Session, ticket_id: int):
     return db.query(models.Ticket.id, models.Ticket.summary, models.Ticket.description, models.Ticket.customer_id,
                     models.Ticket.status_id, models.Ticket.level_id, models.Ticket.agent_id, models.Ticket.ticket_type_id,
-                    models.Ticket.date_occured, models.Ticket.closure_note, models.Customer.username.label('customer_username'),
+                    models.Ticket.date_occured, models.Customer.username.label('customer_username'),
                     models.Status.status_name.label('status_name'), models.Level.level_name.label('level_name'),
                     models.Agent.username.label('agent_username'), models.TicketType.ticket_type_name.label('ticket_type_name')).join(models.Customer, 
                                                                                                                                       models.Status, 
@@ -24,7 +24,7 @@ def get_ticket_no_join(db: Session, ticket_id: int):
 def get_all_tickets(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Ticket.id, models.Ticket.summary, models.Ticket.description, models.Ticket.customer_id,
                     models.Ticket.status_id, models.Ticket.level_id, models.Ticket.agent_id, models.Ticket.ticket_type_id,
-                    models.Ticket.date_occured, models.Ticket.closure_note, models.Customer.username.label('customer_username'),
+                    models.Ticket.date_occured, models.Customer.username.label('customer_username'),
                     models.Status.status_name.label('status_name'), models.Level.level_name.label('level_name'),
                     models.Agent.username.label('agent_username'), models.TicketType.ticket_type_name.label('ticket_type_name')).join(models.Customer, 
                                                                                                                                       models.Status, 
@@ -40,8 +40,7 @@ def post_ticket(db: Session, ticket: schemas.TicketCreate):
         status_id = ticket.status_id,
         level_id = ticket.level_id,
         agent_id = ticket.agent_id,
-        ticket_type_id = ticket.ticket_type_id,
-        closure_note = ticket.closure_note,
+        ticket_type_id = ticket.ticket_type_id
         )
     db.add(ticket)
     db.commit()
@@ -278,3 +277,5 @@ def verify_email(db: Session, email: str):
 
 def verify_password(db: Session, password: str, hashed_password: str):
     return bcrypt.verify(password, hashed_password)
+
+

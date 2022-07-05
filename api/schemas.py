@@ -14,8 +14,7 @@ class TicketBase(BaseModel):
     status_id: Optional[int] = None 
     level_id: Optional[int] = None
     agent_id: Optional[int] = None
-    ticket_type_id: Optional[int] = None 
-    closure_note: str | None = None        
+    ticket_type_id: Optional[int] = None      
   
 class TicketCreate(TicketBase):
     summary: str 
@@ -25,7 +24,6 @@ class TicketCreate(TicketBase):
     level_id: int
     agent_id: int
     ticket_type_id: int
-    closure_note: str | None = None
    
 class Ticket(BaseModel): #check if change from TicketBase to BaseModel will to harm
     id: int
@@ -42,7 +40,6 @@ class Ticket(BaseModel): #check if change from TicketBase to BaseModel will to h
     ticket_type_id: int
     ticket_type_name: str
     date_occured: datetime
-    closure_note: str | None = None
     
     class Config:
         orm_mode = True
@@ -60,7 +57,6 @@ class TicketNoJoin(BaseModel):
     agent_id: int
     ticket_type_id: int
     date_occured: datetime
-    closure_note: str | None = None
     
     class Config:
         orm_mode = True
