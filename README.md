@@ -19,3 +19,10 @@
 |14|`Agents can limit number of record in the result`|
 |15|`API documentation (/docs)`|
 |16|`Containerization - Docker`|
+
+
+# Usage
+1. Clone this repo
+2. Open this project in command line
+3. Fill out the example env file (example.dev and rename it into dev.env)
+4. Type docker-compose up to start this app
