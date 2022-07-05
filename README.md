@@ -24,5 +24,6 @@
 # Usage
 1. Clone this repo
 2. Open this project in command line
-3. Fill out the example env file (example.dev and rename it into dev.env)
-4. Type docker-compose up to start this app
+3. Rename example.dev file to dev.env
+4. Type docker-compose up in the terminal
+5. Open localhost:8080, login: username: root, password: root, database: master, Click SQL query button (left-hand-upper corner of the browser), copy the contents of the sqldump.sql file and paste it into the text area and hit "Perform"
