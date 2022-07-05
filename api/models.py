@@ -1,7 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 
-from sqlalchemy.orm import relationship
-
 from datetime import datetime
 
 from .database import Base
@@ -11,13 +9,14 @@ class Ticket(Base):
     id = Column(Integer, primary_key=True, index=True)
     summary = Column(String(240))
     description = Column(String(240))
-    customer_id = Column(Integer, ForeignKey('customers.id'))
-    status_id = Column(Integer, ForeignKey('statuses.id'))
-    level_id = Column(Integer, ForeignKey('levels.id'))
-    agent_id = Column(Integer, ForeignKey('agents.id'))
-    ticket_type_id = Column(Integer, ForeignKey('tickettypes.id'))
+    customer_id = Column(Integer, ForeignKey('customers.id'), nullable=True)
+    status_id = Column(Integer, ForeignKey('statuses.id'), nullable=True)
+    level_id = Column(Integer, ForeignKey('levels.id'), nullable=True)
+    agent_id = Column(Integer, ForeignKey('agents.id'), nullable=True)
+    ticket_type_id = Column(Integer, ForeignKey('tickettypes.id'), nullable=True)
     date_occured = Column(DateTime, default=datetime.utcnow)
-    closure_note = Column(String(240), nullable=True)
+    
+    
     
 class Status(Base):
     __tablename__ = "statuses"
