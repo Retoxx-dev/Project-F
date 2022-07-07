@@ -97,19 +97,19 @@ def delete_ticket(ticket_id: int, db: Session = Depends(get_db), get_current_use
 @app.put("/api/tickets/{ticket_id}", response_model=schemas.TicketNoJoin ,tags=["Tickets"]) #fix response model
 def update_ticket(ticket_id: int, ticket: schemas.TicketUpdate, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):
     check_for_status = crud.get_status(db=db, status_id=ticket.status_id)
-    if not check_for_status:
+    if not check_for_status and ticket.status_id is not None:
         raise HTTPException(status_code=404, detail="Status with that ID wasn't found")
     check_for_level = crud.get_level(db=db, level_id=ticket.level_id)
-    if not check_for_level:
+    if not check_for_level and ticket.level_id is not None:
         raise HTTPException(status_code=404, detail="Level with that ID wasn't found")
     check_for_ticket_type = crud.get_ticket_type(db=db, ticket_type_id=ticket.ticket_type_id)
-    if not check_for_ticket_type:
+    if not check_for_ticket_type and ticket.ticket_type_id is not None:
         raise HTTPException(status_code=404, detail="Ticket Type with that ID wasn't found")
     check_for_customer = crud.get_customer(db=db, customer_id=ticket.customer_id)
-    if not check_for_customer:
+    if not check_for_customer and ticket.customer_id is not None:
         raise HTTPException(status_code=404, detail="Customer with that ID wasn't found")
     check_for_agent = crud.get_agent(db=db, agent_id=ticket.agent_id)
-    if not check_for_agent:
+    if not check_for_agent and ticket.agent_id is not None:
         raise HTTPException(status_code=404, detail="Agent with that ID wasn't found")
     db_ticket = crud.get_ticket_no_join(db, ticket_id=ticket_id)
     if db_ticket:
