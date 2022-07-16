@@ -17,12 +17,12 @@ jobs:
 
       - name: Build API prod image
         run: |
-          docker build -f ./Docker/Prod/API/Dockerfile -t api:${ GITHUB_SHA::5 } .
+          docker build -f ./Docker/Prod/API/Dockerfile -t api:${{ github.sha::5 }} .
 
       - name: Build Mail sender prod image
         run: |
-          docker build -f ./Docker/Prod/Email_sender/Dockerfile -t email_sender:${ GITHUB_SHA::5 } .
+          docker build -f ./Docker/Prod/Email_sender/Dockerfile -t email_sender:${{ github.sha::5 }} .
 
       - name: Build Nginx prod image
         run: |
-          docker build -f ./Docker/Prod/Nginx/Dockerfile -t nginx:${ GITHUB_SHA::5 } .
+          docker build -f ./Docker/Prod/Nginx/Dockerfile -t nginx:${{ github.sha::5 }} .
