@@ -4,4 +4,5 @@ mysqlclient
 passlib
 bcrypt
 python-jose[cryptography]
+requests
 pika
