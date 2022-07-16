@@ -6,7 +6,7 @@ on:
     paths:
       - 'api/**'
       - 'mail_sender/*'
-      - 'Docker/***'
+      - 'Docker/**'
 
 jobs:
   build-API:
