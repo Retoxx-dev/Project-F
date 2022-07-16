@@ -6,10 +6,10 @@ on:
     paths:
       - 'api/**'
       - 'mail_sender/*'
-      - 'Docker/***'
+      - 'Docker/**'
 
 jobs:
-  build-API:
+  build-prod-images:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Github Action
@@ -17,12 +17,12 @@ jobs:
 
       - name: Build API prod image
         run: |
-          docker build -f ./Docker/Prod/API/Dockerfile -t api:${ GITHUB_SHA::5 } .
+          docker build -f ./Docker/Prod/API/Dockerfile -t api:${{ github.sha }} .
 
       - name: Build Mail sender prod image
         run: |
-          docker build -f ./Docker/Prod/Email_sender/Dockerfile -t email_sender:${ GITHUB_SHA::5 } .
+          docker build -f ./Docker/Prod/Email_sender/Dockerfile -t email_sender:${{ github.sha }} .
 
       - name: Build Nginx prod image
         run: |
-          docker build -f ./Docker/Prod/Nginx/Dockerfile -t nginx:${ GITHUB_SHA::5 } .
+          docker build -f ./Docker/Prod/Nginx/Dockerfile -t nginx:${{ github.sha }} .
