@@ -5,11 +5,9 @@ services:
     container_name: loadbalancer
     build:
       context: .
-      dockerfile: ./Docker/Nginx/Dockerfile
+      dockerfile: ./Docker/Prod/Nginx/Dockerfile
     ports:
       - 80:80
-    volumes:
-      - ./Docker/Nginx/nginx.conf:/etc/nginx/nginx.conf
 
   rabbitmq:
     container_name: rabbitmq
@@ -24,11 +22,9 @@ services:
     container_name: api
     build:
       context: .
-      dockerfile: ./Docker/Python_api/Dockerfile
+      dockerfile: ./Docker/Prod/API/Dockerfile
     ports:
       - 81:8000
-    volumes:
-      - .:/app
     depends_on:
       - db
     env_file:
@@ -38,27 +34,13 @@ services:
     container_name: email_sender
     build:
       context: .
-      dockerfile: ./Docker/Python_email_sender/Dockerfile
+      dockerfile: ./Docker/Prod/Email_sender/Dockerfile
     ports:
       - 82:8001
-    volumes:
-      - .:/app
     env_file:
       - dev.env
     depends_on:
       - rabbitmq
-
-  frontend:
-    container_name: front
-    build:
-      context: .
-      dockerfile: ./Docker/React/Dockerfile
-    ports:
-      - 3000:3000
-    environment:
-      WATCHPACK_POLLING: "true"
-    volumes:
-      - ./frontend/:/app
  
   db:
     container_name: db
@@ -70,13 +52,6 @@ services:
       - 3306:3306
     volumes:
       - dbdata:/var/lib/mysql
-
-  adminer:
-    container_name: adminer
-    image: adminer
-    ports:
-      - 8080:8080
-
 
 volumes:
   dbdata:

@@ -2,7 +2,7 @@ FROM python:3.10
 
 WORKDIR /app
 
-COPY ./Docker/Python_email_sender/requirements.txt .
+COPY ./Docker/Dev/Email_sender/requirements.txt .
 
 RUN pip install -r requirements.txt
 
