@@ -19,7 +19,7 @@ variable "acr-service-principal-name" {
 variable "acr-service-principal-password-name" {
     type = string
     default = "GithubActionsAcrAccessSecret"
-    description = "Name of the service principal's secret"
+    description = "Name of the service principal secret"
 }
 
 variable "github-repository-name" {
