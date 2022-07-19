@@ -11,5 +11,6 @@ provider "azurerm" {
   version = "3.14.0"
   features {}
 }
- 
+
+
 data "azurerm_client_config" "current" {}
