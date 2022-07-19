@@ -19,6 +19,7 @@ jobs:
       run:
         shell: bash
         working-directory: ./terraform
+        TF_CLI_ARGS: '-var-file="dev.tfvars"'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -27,16 +28,18 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Terraform Init
+        id: fmt
+        run: terraform fmt
+
+      - name: Terraform Init
         id: init
-        run: terraform init        
+        run: terraform init
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
         continue-on-error: true
-        env:
-          TF_CLI_ARGS: '-var-file="dev.tfvars"'
 
       - name: Update Pull Request
         uses: actions/github-script@v6
@@ -46,8 +49,9 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\``
 
             <details><summary>Show Plan</summary>
 
@@ -73,5 +77,3 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
-        env:
-          TF_CLI_ARGS: '-var-file="dev.tfvars"'
