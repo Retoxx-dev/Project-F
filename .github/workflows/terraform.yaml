@@ -28,14 +28,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
-        env:
-          TF_CLI_ARGS: '-var-file="dev.tfvars"'
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
-        
+        run: terraform init        
 
       - name: Terraform Plan
         id: plan
@@ -53,10 +46,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
             #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
 
             <details><summary>Show Plan</summary>
 
