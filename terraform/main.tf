@@ -5,17 +5,29 @@ terraform {
     container_name       = "state-project-f-dev-001"
     key                  = "projectf-dev-001.tfstate"
   }
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=3.0.0"
+    }
+
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 2.0.0"
+    }
+
+    github = {
+      source  = "integrations/github"
+      version = "~> 4.0"
+    }
+  }
 }
 
 provider "azurerm" {
-  version = "3.14.0"
   features {}
 }
- 
-data "azurerm_client_config" "current" {}
- 
-#Create Resource Group
-resource "azurerm_resource_group" "rg-projectf-dev-001" {
-  name     = "rg-projectf-dev-001"
-  location = "northeurope"
-}
+
+provider "azuread" {}
+
+provider "github" {}
+
