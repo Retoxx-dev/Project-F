@@ -25,7 +25,7 @@ variable "acr-service-principal-password-name" {
 variable "github-repository-name" {
     type = string
     default = "Project-F"
-    description = "Github repository name"
+    description = "Github's repository name"
 }
 
 variable "service-principal-github-secret-name" {
