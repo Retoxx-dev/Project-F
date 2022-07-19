@@ -29,18 +29,21 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
+        env:
+          TF_CLI_ARGS: '-var-file="dev.tfvars"'
 
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
-        env:
-          TF_CLI_ARGS: '-var-file="dev.tfvars"'
+        
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color -input=false
         continue-on-error: true
+        env:
+          TF_CLI_ARGS: '-var-file="dev.tfvars"'
 
       - name: Update Pull Request
         uses: actions/github-script@v6
@@ -79,3 +82,5 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
+        env:
+          TF_CLI_ARGS: '-var-file="dev.tfvars"'
