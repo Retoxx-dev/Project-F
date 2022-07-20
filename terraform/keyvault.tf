@@ -16,8 +16,16 @@ resource "azurerm_key_vault" "akv-terraform-secrets" {
     object_id = data.azurerm_client_config.current.object_id
   }
 
+  key_permissions = [
+
+    ]
+
   secret_permissions = [
       "Get",
       "Set"
+    ]
+
+  storage_permissions = [
+      "Get",
     ]
 }
