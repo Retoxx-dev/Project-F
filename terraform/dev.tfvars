@@ -6,6 +6,6 @@ acr-service-principal-name = "GithubActionsAcrAccess"
 
 acr-service-principal-password-name = "GithubActionsAcrAccessSecret"
 
-github-repository-name = "Project-F"
+github-repository-name = "Retoxx-dev/Project-F"
 
 service-principal-github-secret-name = "GithubActionsAcrAccessSecret"
