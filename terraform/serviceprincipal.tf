@@ -2,7 +2,6 @@ data "azuread_client_config" "current" {}
 
 resource "azuread_application" "ACR-application" {
   display_name = var.acr-service-principal-name
-  owners       = [data.azuread_client_config.current.object_id]
 }
 
 resource "azuread_application_password" "ACR-application-password" {
