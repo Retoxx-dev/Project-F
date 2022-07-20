@@ -1,9 +1,9 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = var.rg-terraform
-    storage_account_name = var.sa-terraform-dev-state
-    container_name       = var.sac-terraform-dev-state
-    key                  = var.terraform-dev-state-filenmae
+    resource_group_name  = "rg-projectf-terraform-dev-001"
+    storage_account_name = "saprojectfstatedev001"
+    container_name       = "state-project-f-dev-001"
+    key                  = "projectf-dev-001.tfstate"
   }
   required_providers {
     azurerm = {
