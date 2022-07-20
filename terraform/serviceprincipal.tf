@@ -8,7 +8,7 @@ resource "azuread_application" "ACR-service-principal" {
 resource "azuread_service_principal_password" "ACR-service-principal-password" {
   display_name         = var.acr-service-principal-password-name
   service_principal_id = azuread_application.ACR-service-principal.id
-  end_date_relative    = "720h"
+  end_date    = "2022-09-01T00:00:00Z"
   value                = random_string.service-principal-password.result
 }
 
