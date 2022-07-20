@@ -27,3 +27,8 @@ variable "service-principal-github-secret-name" {
     type = string
     description = "Name of the github actions secret"
 }
+
+variable "github_token" {
+    type = "string"
+    description = "Github token"
+}
