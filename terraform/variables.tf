@@ -50,7 +50,7 @@ variable "acr-application-access-name" {
 
 variable "acr-application-access-secret-name" {
     type = string
-    default = "GithubActionsAcrAccessSecret"
+    default = "GHActionsAcrAccessSecret"
     description = "Name of the service principal secret"
 }
 
