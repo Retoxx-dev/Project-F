@@ -15,7 +15,6 @@ jobs:
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
-      TF_CLI_ARGS: '-var-file="dev.tfvars"'
     defaults:
       run:
         shell: bash
@@ -38,7 +37,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
+        run: terraform plan -no-color -input=false -var-file="dev.tfvars"
         continue-on-error: true
 
       - name: Update Pull Request
@@ -76,4 +75,4 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
+        run: terraform apply -auto-approve -input=false -var-file="dev.tfvars"
