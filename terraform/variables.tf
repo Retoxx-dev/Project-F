@@ -82,5 +82,5 @@ variable "github-repository-name" {
 
 variable "acr-dev-contianer-registry-name" {
   type = string
-  default = "acr-projectf-dev-001"
+  default = "acrprojectfdev001"
 }
