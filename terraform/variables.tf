@@ -48,14 +48,24 @@ variable "acr-application-access-name" {
     description = "Name of the service principal that will connect to ACR"
 }
 
-variable "acr-application-access-secret-name" {
+variable "acr-access-secret-name" {
+  type = string
+  default = "GHActionsAcrAccessSecret"
+  description = "Name of the acr access app secret"
+}
+
+variable "GITHUB_TOKEN" {
+  type = string
+}
+
+variable "github-secret-acr-aplication-access" {
     type = string
-    default = "GHActionsAcrAccessSecret"
+    default = "AcrAccessSecret"
     description = "Name of the service principal secret"
 }
 
-variable "akv-terraform-usables-name" {
-    type = string
-    default = "akv-projectf-dev-001"
-    description = "Name of the key vault with terraofmr secrets"
+variable "github-repository-name" {
+  type = string
+    default = "Project-F"
+    description = "Repository name"
 }
