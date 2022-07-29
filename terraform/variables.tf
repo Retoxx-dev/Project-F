@@ -28,8 +28,6 @@ variable "terraform-dev-state-filenmae" {
     description = "Name of the dev terraform state file"
 }
 
-
-
 variable "rg-main-app-name" {
     type = string
     default = "rg-projectf-dev-001"
@@ -68,4 +66,10 @@ variable "github-repository-name" {
   type = string
     default = "Project-F"
     description = "Repository name"
+}
+
+variable "akv-terraform-usables-name" {
+    type = string
+    default = "akv-projectf-dev-001"
+    description = "Name of the key vault with terraofmr secrets"
 }
