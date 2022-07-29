@@ -40,6 +40,18 @@ variable "rg-main-app-location" {
     description = "Main resource group location"
 }
 
+variable "rg-side-app-name" {
+    type = string
+    default = "rg-projectf-dev-002"
+    description = "Side resource group name"
+}
+
+variable "rg-side-app-location" {
+    type = string
+    default = "northeurope"
+    description = "Side resource group location"
+}
+
 variable "acr-application-access-name" {
     type = string
     default = "TerraformAcrAccess"
@@ -63,7 +75,12 @@ variable "github-secret-acr-aplication-access" {
 }
 
 variable "github-repository-name" {
-  type = string
+    type = string
     default = "Project-F"
     description = "Repository name"
+}
+
+variable "acr-dev-contianer-registry-name" {
+  type = string
+  default = "acr-projectf-dev-001"
 }
