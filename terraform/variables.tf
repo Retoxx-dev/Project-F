@@ -48,6 +48,12 @@ variable "acr-application-access-name" {
     description = "Name of the service principal that will connect to ACR"
 }
 
+variable "acr-access-secret-name" {
+  type = string
+  default = "GHActionsAcrAccessSecret"
+  description = "Name of the acr access app secret"
+}
+
 variable "GITHUB_TOKEN" {
   type = string
 }
@@ -61,4 +67,5 @@ variable "github-secret-acr-aplication-access" {
 variable "github-repository-name" {
   type = string
     default = "Project-F"
+    description = "Repository name"
 }
