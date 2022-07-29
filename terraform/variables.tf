@@ -40,6 +40,18 @@ variable "rg-main-app-location" {
     description = "Main resource group location"
 }
 
+variable "rg-side-app-name" {
+    type = string
+    default = "rg-projectf-dev-002"
+    description = "Side resource group name"
+}
+
+variable "rg-side-app-location" {
+    type = string
+    default = "northeurope"
+    description = "Side resource group location"
+}
+
 variable "acr-application-access-name" {
     type = string
     default = "TerraformAcrAccess"
@@ -56,14 +68,31 @@ variable "GITHUB_TOKEN" {
   type = string
 }
 
-variable "github-secret-acr-aplication-access" {
+variable "github-secret-acr-aplication-access-password" {
     type = string
-    default = "AcrAccessSecret"
+    default = "SP_PASSWORD"
     description = "Name of the service principal secret"
 }
 
+variable "github-secret-acr-aplication-access-id" {
+    type = string
+    default = "SP_APPID"
+    description = "Name of the service principal appid"
+}
+
+variable "github-secret-acr-server-login-name" {
+    type = string
+    default = "DOCKER_SERVER"
+    description = "Name of the ACR server"
+}
+
 variable "github-repository-name" {
-  type = string
+    type = string
     default = "Project-F"
     description = "Repository name"
+}
+
+variable "acr-dev-contianer-registry-name" {
+  type = string
+  default = "acrprojectfdev001"
 }
