@@ -67,15 +67,3 @@ variable "github-repository-name" {
     default = "Project-F"
     description = "Repository name"
 }
-
-variable "acr-application-access-secret-name" {
-    type = string
-    default = "GHActionsAcrAccessSecret"
-    description = "Name of the service principal secret"
-}
-
-variable "akv-terraform-usables-name" {
-    type = string
-    default = "akv-projectf-dev-001"
-    description = "Name of the key vault with terraofmr secrets"
-}
