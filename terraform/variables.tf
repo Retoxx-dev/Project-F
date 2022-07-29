@@ -68,10 +68,22 @@ variable "GITHUB_TOKEN" {
   type = string
 }
 
-variable "github-secret-acr-aplication-access" {
+variable "github-secret-acr-aplication-access-password" {
     type = string
-    default = "AcrAccessSecret"
+    default = "SP_PASSWORD"
     description = "Name of the service principal secret"
+}
+
+variable "github-secret-acr-aplication-access-id" {
+    type = string
+    default = "SP_APPID"
+    description = "Name of the service principal appid"
+}
+
+variable "github-secret-acr-server-login-name" {
+    type = string
+    default = "DOCKER_SERVER"
+    description = "Name of the ACR server"
 }
 
 variable "github-repository-name" {
