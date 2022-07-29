@@ -10,7 +10,7 @@ resource "azurerm_container_registry" "acr-dev" {
 }
 
 resource "azurerm_role_assignment" "acr-role-assignment-dev" {
-  principal_id                     = azuread_application.ACR-access-app.object_id
+  principal_id                     = azuread_application_password.ACR-access-app-password.application_object_id
   role_definition_name             = "AcrPush"
   scope                            = azurerm_container_registry.acr-dev.id
   skip_service_principal_aad_check = true
