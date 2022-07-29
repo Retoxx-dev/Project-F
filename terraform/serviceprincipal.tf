@@ -9,3 +9,8 @@ resource "azuread_application_password" "ACR-access-app-password" {
   application_object_id = azuread_application.ACR-access-app.id
   end_date    = "2022-09-01T01:02:03Z"
 }
+
+resource "azuread_service_principal" "ACR-access-service-principal" {
+  application_id = azuread_application.ACR-access-app.application_id
+  app_role_assignment_required = false
+}
