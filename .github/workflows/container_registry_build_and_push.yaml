@@ -1,0 +1,128 @@
+---
+name: Build and push images to Azure Container Registry
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-for-api-files-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      api_files_changed: ${{ steps.check_api_files_changed.outputs.api_files_changed }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - shell: pwsh
+        id: check_api_files_changed
+        run: |
+
+          $diff = git diff --name-only HEAD^ HEAD
+
+          $SourceDiff = $diff | Where-Object { $_ -match '^api/' }
+          $HasDiff = $SourceDiff.Length -gt 0
+
+          Write-Host "::set-output name=api_files_changed::$HasDiff"
+  
+  check-for-email-sender-files-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      email_sender_files_changed: ${{ steps.check_email_sender_files_changed.outputs.email_sender_files_changed }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - shell: pwsh
+        id: check_email_sender_files_changed
+        run: |
+
+          $diff = git diff --name-only HEAD^ HEAD
+
+          $SourceDiff = $diff | Where-Object { $_ -match '^mail_sender/' }
+          $HasDiff = $SourceDiff.Length -gt 0
+
+          Write-Host "::set-output name=email_sender_files_changed::$HasDiff"
+  
+  check-for-nginx-files-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      nginx_files_changed: ${{ steps.check_nginx_files_changed.outputs.nginx_files_changed }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - shell: pwsh
+        id: check_nginx_files_changed
+        run: |
+
+          $diff = git diff --name-only HEAD^ HEAD
+
+          $SourceDiff = $diff | Where-Object { $_ -match '^Docker/Prod/Nginx/' }
+          $HasDiff = $SourceDiff.Length -gt 0
+
+          Write-Host "::set-output name=nginx_files_changed::$HasDiff"
+
+  build-and-push-API:
+    runs-on: ubuntu-latest
+    needs: [check-for-api-files-changes]
+    if: needs.check-for-api-files-changes.outputs.api_files_changed == 'True'
+    steps:
+      - name: Checkout Github Action
+        uses: actions/checkout@main
+
+      - name: Build API prod image
+        run: |
+          docker build -f ./Docker/Prod/API/Dockerfile -t ${{ secrets.DOCKER_SERVER }}/api:${{ github.sha }} .
+
+      - name: Login to ACR
+        run: |
+          docker login ${{ secrets.DOCKER_SERVER }} --username ${{ secrets.SP_APPID }} --password ${{ secrets.SP_PASSWORD }}
+
+      - name: Push API image
+        run: |
+          docker push ${{ secrets.DOCKER_SERVER }}/api:${{ github.sha }}
+
+  build-and-push-MailSender:
+    runs-on: ubuntu-latest
+    needs: [check-for-email-sender-files-changes]
+    if: needs.check-for-email-sender-files-changes.outputs.email_sender_files_changed == 'True'
+    steps:
+      - name: Checkout Github Action
+        uses: actions/checkout@main
+
+      - name: Build Mail sender prod image
+        run: |
+          docker build -f ./Docker/Prod/Email_sender/Dockerfile -t ${{ secrets.DOCKER_SERVER }}/email_sender:${{ github.sha }} .
+
+      - name: Login to ACR
+        run: |
+          docker login ${{ secrets.DOCKER_SERVER }} --username ${{ secrets.SP_APPID }} --password ${{ secrets.SP_PASSWORD }}
+
+      - name: Push mail sender image
+        run: |
+          docker push ${{ secrets.DOCKER_SERVER }}/email_sender:${{ github.sha }}
+
+  build-and-push-Nginx:
+    runs-on: ubuntu-latest
+    needs: [check-for-nginx-files-changes]
+    if: needs.check-for-nginx-files-changes.outputs.nginx_files_changed == 'True'
+    steps:
+      - name: Checkout Github Action
+        uses: actions/checkout@main
+
+      - name: Build Nginx prod image
+        run: |
+          docker build -f ./Docker/Prod/Nginx/Dockerfile -t ${{ secrets.DOCKER_SERVER }}/nginx:${{ github.sha }} .
+  
+      - name: Login to ACR
+        run: |
+          docker login ${{ secrets.DOCKER_SERVER }} --username ${{ secrets.SP_APPID }} --password ${{ secrets.SP_PASSWORD }}
+
+      - name: Push Nginx image
+        run: |
+          docker push ${{ secrets.DOCKER_SERVER }}/nginx:${{ github.sha }}
