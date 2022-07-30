@@ -40,6 +40,11 @@ def get_db():
 async def configure():
     async with contextmanager_in_threadpool(contextmanager(get_db)()) as db:
         seed.seed_initial_data(db=db)
+        
+#Health Check
+@app.get('/api/healthcheck', tags=["Health Check"])
+def healthcheck():
+    return {'status' : "Healthy"}
     
 #Auth
 @app.post('/api/auth/', tags=["Authorize"])
