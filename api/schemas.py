@@ -142,22 +142,7 @@ class AgentUpdate(AgentBase):
 class AgentResetPassword(BaseModel):
     password: str
     confirm_password: str
-
-#Auth
-class Auth(BaseModel):
-    email: str
-    password: str
-    
-    
-#Token
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(BaseModel):
-    username: str | None = None
-    
+   
 #Customers
 class CustomerBase(BaseModel):
     username: Optional[str] = None
@@ -183,3 +168,6 @@ class CustomerCreate(CustomerBase):
         
 class CustomerUpdate(CustomerBase):
     pass
+
+class TokenData(BaseModel):
+    username: str | None = None

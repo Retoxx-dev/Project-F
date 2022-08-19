@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import crud, models, schemas, oauth2, token_gen, seed
+from . import crud, models, schemas, oauth2, ver_token, seed
 from .database import SessionLocal, engine
 
 from contextlib import contextmanager
@@ -46,20 +46,6 @@ async def configure():
 def healthcheck():
     return {'status' : "Healthy"}
     
-#Auth
-@app.post('/api/auth/', tags=["Authorize"])
-def authorize(auth: schemas.Auth, db: Session = Depends(get_db)):
-    user = crud.verify_email(db=db, email=auth.email)
-    if not user:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    verify_password = crud.verify_password(db=db, password=auth.password, hashed_password=user.password_hash)
-    if not verify_password:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    
-    access_token = token_gen.create_access_token(data={"sub": user.email})
-    
-    return {'access_token' : access_token}
-
 #Tickets
 @app.get('/api/tickets/', response_model=list[schemas.Ticket], tags=["Tickets"])
 def read_all_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), get_current_user: schemas.Agent = Depends(oauth2.get_current_user)):

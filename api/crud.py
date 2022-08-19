@@ -271,11 +271,4 @@ def put_customer(db: Session, db_obj, obj_in):
     db.refresh(db_obj)
     return db_obj
 
-#Auth
-def verify_email(db: Session, email: str):
-    return db.query(models.Agent).filter(models.Agent.email == email).first()
-
-def verify_password(db: Session, password: str, hashed_password: str):
-    return bcrypt.verify(password, hashed_password)
-
 
