@@ -33,15 +33,6 @@ class TicketType(Base):
     id = Column(Integer, primary_key=True, index=True)
     ticket_type_name = Column(String(30), unique=True)
     
-class Agent(Base):
-    __tablename__ = "agents"
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(40))
-    email = Column(String(40))
-    firstname = Column(String(40))
-    lastname = Column(String(40))
-    password_hash = Column(String(240))
-    
 class Customer(Base):
     __tablename__ = "customers"
     id = Column(Integer, primary_key=True, index=True)
@@ -50,3 +41,11 @@ class Customer(Base):
     firstname = Column(String(40))
     lastname = Column(String(40))
     
+class Agent(Base):
+    __tablename__ = "agents"
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(40))
+    email = Column(String(40))
+    firstname = Column(String(40))
+    lastname = Column(String(40))
+    password_hash = Column(String(240))

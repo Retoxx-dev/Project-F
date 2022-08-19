@@ -34,6 +34,20 @@ services:
     env_file:
       - dev.env
 
+  auth:
+    container_name: auth
+    build:
+      context: .
+      dockerfile: ./Docker/Dev/Auth/Dockerfile
+    ports:
+      - 83:8002
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    env_file:
+      - dev.env
+
   email_sender:
     container_name: email_sender
     build:
