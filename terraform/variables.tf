@@ -1,6 +1,6 @@
 variable "rg-terraform" {
     type = string
-    default = "rg-projectf-terraform-dev-001"
+    default = "rg-projectf-terraform-prod-001"
     description = "Terraform usables resource group name"
 }
 
@@ -10,27 +10,27 @@ variable "rg-terraform-location" {
     description = "Terraform usabled resource group location"
 }
 
-variable "sa-terraform-dev-state" {
+variable "sa-terraform-prod-state" {
     type = string
-    default = "saprojectfstatedev001"
+    default = "saprojectfstateprod001"
     description = "Storage account with terraform state file in it"
 }
 
-variable "sac-terraform-dev-state" {
+variable "sac-terraform-prod-state" {
     type = string
-    default = "state-project-f-dev-001"
+    default = "state-project-f-prod-001"
     description = "Container with terraform state file in it"
 }
 
-variable "terraform-dev-state-filenmae" {
+variable "terraform-prod-state-filenmae" {
     type = string
-    default = "projectf-dev-001.tfstate"
-    description = "Name of the dev terraform state file"
+    default = "projectf-prod-001.tfstate"
+    description = "Name of the prod terraform state file"
 }
 
 variable "rg-main-app-name" {
     type = string
-    default = "rg-projectf-dev-001"
+    default = "rg-projectf-prod-001"
     description = "Main resource group name"
 }
 
@@ -42,7 +42,7 @@ variable "rg-main-app-location" {
 
 variable "rg-side-app-name" {
     type = string
-    default = "rg-projectf-dev-002"
+    default = "rg-projectf-prod-002"
     description = "Side resource group name"
 }
 
@@ -92,7 +92,7 @@ variable "github-repository-name" {
     description = "Repository name"
 }
 
-variable "acr-dev-contianer-registry-name" {
+variable "acr-prod-contianer-registry-name" {
   type = string
-  default = "acrprojectfdev001"
+  default = "acrprojectfprod001"
 }

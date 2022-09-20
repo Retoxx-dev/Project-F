@@ -10,9 +10,9 @@ resource "github_actions_secret" "github-acr-access-app-password" {
 resource "github_actions_secret" "github-docker-server-name" {
   repository       = var.github-repository-name
   secret_name      = var.github-secret-acr-server-login-name
-  plaintext_value  = azurerm_container_registry.acr-dev.login_server
+  plaintext_value  = azurerm_container_registry.acr-prod.login_server
   depends_on = [
-    azurerm_container_registry.acr-dev
+    azurerm_container_registry.acr-prod
   ]
 }
 
