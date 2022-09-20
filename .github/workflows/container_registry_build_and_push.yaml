@@ -50,7 +50,7 @@ jobs:
   check-for-auth-files-changes:
     runs-on: ubuntu-latest
     outputs:
-      auth_files_changed: ${{ steps.check_auth_files_changed.outputs.check_auth_files_changed }}
+      auth_files_changed: ${{ steps.check_auth_files_changed.outputs.auth_files_changed }}
     steps:
       - uses: actions/checkout@v2
         with:
