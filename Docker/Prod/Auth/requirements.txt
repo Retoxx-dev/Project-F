@@ -1,0 +1,5 @@
+fastapi[all]
+sqlalchemy
+mysqlclient
+passlib
+python-jose[cryptography]
