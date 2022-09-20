@@ -1,9 +1,9 @@
 resource "github_actions_secret" "github-acr-access-app-password" {
   repository       = var.github-repository-name
   secret_name      = var.github-secret-acr-aplication-access-password
-  plaintext_value  = azuread_application_password.ACR-access-app-password.value
+  plaintext_value  = azuread_service_principal_password.ACR-access-sp-password.value
   depends_on = [
-    azuread_application_password.ACR-access-app-password
+    azuread_service_principal_password.ACR-access-sp-password
   ]
 }
 

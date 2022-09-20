@@ -10,7 +10,7 @@ resource "azurerm_container_registry" "acr-prod" {
 }
 
 resource "azurerm_role_assignment" "acr-role-assignment-prod" {
-  principal_id                     = data.azuread_service_principal.data-ACR-access-service-principal.id
+  principal_id                     = azuread_service_principal_password.ACR-access-sp-password.service_principal_id
   role_definition_name             = "AcrPush"
   scope                            = azurerm_container_registry.acr-prod.id
   skip_service_principal_aad_check = true
