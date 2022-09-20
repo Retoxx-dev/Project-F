@@ -17,7 +17,7 @@ def get_db():
     finally:
         db.close()
 
-#Auth
+#Auth endpoint
 @app.post('/api/auth/', tags=["Authorize"])
 def authorize(auth: schemas.Auth, db: Session = Depends(get_db)):
     user = crud.verify_email(db=db, email=auth.email)
